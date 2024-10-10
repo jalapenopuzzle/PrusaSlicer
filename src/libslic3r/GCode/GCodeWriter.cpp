@@ -340,27 +340,49 @@ std::string GCodeWriter::travel_to_xyz(const Vec3d& from, const Vec3d &to, const
 }
 
 std::string GCodeWriter::get_travel_to_xyz_gcode(const Vec3d &from, const Vec3d &to, const std::string_view comment) const {
-    GCodeG1Formatter w;
-    w.emit_xyz(to);
-
+    bool separate_z = true;
+    std::string result;
     double speed = this->config.travel_speed.value;
-    const double speed_z = this->config.travel_speed_z.value;
+    double speed_z = this->config.travel_speed_z.value;
+    if (speed_z == 0)
+        speed_z = speed;
 
-    if (speed_z) {
-        const Vec3d move{to - from};
-        const double distance{move.norm()};
-        const double abs_unit_vector_z{std::abs(move.z())/distance};
-        // De-compose speed into z vector component according to the movement unit vector.
-        const double speed_vector_z{abs_unit_vector_z * speed};
-        if (speed_vector_z > speed_z) {
-            // Re-compute speed so that the z component is exactly speed_z.
-            speed = abs_unit_vector_z / speed_z;
+    if (separate_z) {
+        GCodeG1Formatter w1, w2;
+        w1.emit_xy(to.head<2>());
+        w1.emit_f(speed * 60.0);
+        w1.emit_comment(this->config.gcode_comments, comment);
+
+        w2.emit_z(to.z());
+        w2.emit_f(speed_z * 60);
+        if (to.z() > from.z()) {
+            result += w2.string();
+            result += w1.string();
+        } else {
+            result += w1.string();
+            result += w2.string();
         }
-    }
-    w.emit_f(speed * 60.0);
+    } else {
+        GCodeG1Formatter w;
+        w.emit_xyz(to);
 
-    w.emit_comment(this->config.gcode_comments, comment);
-    return w.string();
+        if (speed_z) {
+            const Vec3d move{to - from};
+            const double distance{move.norm()};
+            const double abs_unit_vector_z{std::abs(move.z())/distance};
+            // De-compose speed into z vector component according to the movement unit vector.
+            const double speed_vector_z{abs_unit_vector_z * speed};
+            if (speed_vector_z > speed_z) {
+                // Re-compute speed so that the z component is exactly speed_z.
+                speed = abs_unit_vector_z / speed_z;
+            }
+        }
+        w.emit_f(speed * 60.0);
+
+        w.emit_comment(this->config.gcode_comments, comment);
+        result += w.string();
+    }
+    return result;
 }
 
 std::string GCodeWriter::travel_to_z(double z, const std::string_view comment)
