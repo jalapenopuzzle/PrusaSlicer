@@ -124,7 +124,7 @@ TEST_CASE("Extrusion, travels, temeperatures", "[GCode]") {
     config.set_deserialize_strict({
         { "gcode_comments", 1 },
         { "complete_objects", 1 },
-        { "extrusion_axis", 'A' },
+        { "extrusion_axis", "A" },
         { "start_gcode", "" },  // prevent any default extra Z move
         { "layer_height", 0.4 },
         { "first_layer_height", 0.4 },
