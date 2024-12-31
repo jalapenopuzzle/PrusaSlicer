@@ -174,6 +174,11 @@ TEST_CASE("Extrusion, travels, temperatures", "[GCode]") {
         }
     });
 
+    // Remove last travel_moves returning to origin
+    if (travel_moves.back().x() == 0 && travel_moves.back().y() == 0) {
+        travel_moves.pop_back();
+    }
+
     const unsigned layer_count = 20 / 0.4;
     INFO("Complete_objects generates the correct number of Z moves.");
     CHECK(z_moves.size() == layer_count * 2);
