@@ -197,20 +197,30 @@ TEST_CASE("Extrusion, travels, temperatures", "[GCode]") {
 
 
 TEST_CASE("Used filament", "[GCode]") {
-    DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();
-    config.set_deserialize_strict({
-        { "retract_length", "1000000" },
+    DynamicPrintConfig config1 = Slic3r::DynamicPrintConfig::full_print_config();
+    config1.set_deserialize_strict({
+        { "retract_length", "0" },
         { "use_relative_e_distances", 1 },
         { "layer_gcode", "G92 E0\n" },
     });
-	GCodeReader parser;
-    Print print;
-    Model model;
-    Test::init_print({TestMesh::cube_20x20x20}, print, model, config);
-    Test::gcode(print);
+    Print print1;
+    Model model1;
+    Test::init_print({TestMesh::cube_20x20x20}, print1, model1, config1);
+    Test::gcode(print1);
+
+    DynamicPrintConfig config2 = Slic3r::DynamicPrintConfig::full_print_config();
+    config2.set_deserialize_strict({
+        { "retract_length", "999" },
+        { "use_relative_e_distances", 1 },
+        { "layer_gcode", "G92 E0\n" },
+    });
+    Print print2;
+    Model model2;
+    Test::init_print({TestMesh::cube_20x20x20}, print2, model2, config2);
+    Test::gcode(print2);
 
     INFO("Final retraction is not considered in total used filament");
-    CHECK(print.print_statistics().total_used_filament > 0);
+    CHECK(print1.print_statistics().total_used_filament == print2.print_statistics().total_used_filament);
 }
 
 void check_m73s(Print& print){
