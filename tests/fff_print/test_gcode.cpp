@@ -119,7 +119,7 @@ std::optional<double> parse_axis(const std::string& line, const std::string& axi
 * - no travel moves go outside skirt
 * - temperatures are set correctly
 */
-TEST_CASE("Extrusion, travels, temeperatures", "[GCode]") {
+TEST_CASE("Extrusion, travels, temperatures", "[GCode]") {
     DynamicPrintConfig config = Slic3r::DynamicPrintConfig::full_print_config();
     config.set_deserialize_strict({
         { "gcode_comments", 1 },
