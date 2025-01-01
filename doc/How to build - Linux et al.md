@@ -73,8 +73,28 @@ And that's it. It is now possible to run the freshly built PrusaSlicer binary:
     cd src
     ./prusa-slicer
 
+#### 4. Running Unit Tests
 
+For the most complete unit testing, use the Debug build option `-DCMAKE_BUILD_TYPE=Debug` when running cmake.
+Without the Debug build, internal assert statements are not tested.
 
+To run the unit tests:
+
+    cd build
+    make test
+
+To run a specific unit test:
+
+    cd build/tests/
+
+Then run one of the following:
+
+    ./arrange/arrange_tests
+    ./fff_print/fff_print_tests
+    ./libslic3r/libslic3r_tests
+    ./sla_print/sla_print_tests
+    ./slic3rutils/slic3rutils_tests
+    ./thumbnails/thumbnails_tests
 
 ## Useful CMake flags when building dependencies
 

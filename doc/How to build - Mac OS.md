@@ -63,6 +63,29 @@ Alternatively, if you would like to use XCode GUI, modify the `cmake` command to
 and then open the `PrusaSlicer.xcodeproj` file.
 This should open up XCode where you can perform build using the GUI or perform other tasks.
 
+### Running Unit Tests
+
+For the most complete unit testing, use the Debug build option `-DCMAKE_BUILD_TYPE=Debug` when running cmake.
+Without the Debug build, internal assert statements are not tested.
+
+To run all the unit tests:
+
+    cd build
+    make test
+
+To run a specific unit test:
+
+    cd build/tests/
+
+Then run one of the following:
+
+    ./arrange/arrange_tests
+    ./fff_print/fff_print_tests
+    ./libslic3r/libslic3r_tests
+    ./sla_print/sla_print_tests
+    ./slic3rutils/slic3rutils_tests
+    ./thumbnails/thumbnails_tests
+
 ### Note on Mac OS X SDKs
 
 By default PrusaSlicer builds against whichever SDK is the default on the current system.
