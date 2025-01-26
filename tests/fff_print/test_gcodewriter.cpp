@@ -130,10 +130,9 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         std::string result1{ writer.travel_to_z(z1) };
         CHECK(result1 == "G1 Z10 F7800\n");
 
-        // This should test with pow_10_inv[XYZF_EXPORT_DIGITS] exactly,
+        // This should test with XYZ_EPSILON exactly,
         // but IEEE 754 floating point numbers cannot pass the test.
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        double z2 = z1 + XYZ_EPSILON * 1.001;
+        double z2 = z1 + GCodeFormatter::XYZ_EPSILON * 1.001;
         std::string result2{ writer.travel_to_z(z2) };
 
         std::ostringstream oss;
@@ -149,13 +148,12 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         std::string result1{ writer.travel_to_z(z1) };
         CHECK(result1 == "G1 Z10 F7800\n");
 
-        // Movement smaller than pow_10_inv[XYZF_EXPORT_DIGITS]
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        double z2 = z1 + (XYZ_EPSILON * 0.999);
+        // Movement smaller than XYZ_EPSILON
+        double z2 = z1 + (GCodeFormatter::XYZ_EPSILON * 0.999);
         std::string result2{ writer.travel_to_z(z2) };
         CHECK(result2 == "");
 
-        double z3 = z1 + (XYZ_EPSILON * 0.1);
+        double z3 = z1 + (GCodeFormatter::XYZ_EPSILON * 0.1);
         std::string result3{ writer.travel_to_z(z3) };
         CHECK(result3 == "");
     }
@@ -176,10 +174,9 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         CHECK(result1 == "G1 X10 Y10 Z10 F7800\n");
 
         Vec3d v2 = v1;
-        // This should test with pow_10_inv[XYZF_EXPORT_DIGITS] exactly,
+        // This should test with XYZ_EPSILON exactly,
         // but IEEE 754 floating point numbers cannot pass the test.
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        v2.array() += XYZ_EPSILON * 1.001;
+        v2.array() += GCodeFormatter::XYZ_EPSILON * 1.001;
         std::string result2{ writer.travel_to_xyz(v2) };
 
         std::ostringstream oss;
@@ -200,10 +197,9 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         CHECK(result1 == "G1 X10 Y10 Z10 F7800\n");
 
         Vec3d v2 = v1;
-        // This should test with pow_10_inv[XYZF_EXPORT_DIGITS] exactly,
+        // This should test with XYZ_EPSILON exactly,
         // but IEEE 754 floating point numbers cannot pass the test.
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        v2.x() += XYZ_EPSILON * 1.001;
+        v2.x() += GCodeFormatter::XYZ_EPSILON * 1.001;
         std::string result2{ writer.travel_to_xyz(v2) };
 
         std::ostringstream oss;
@@ -224,10 +220,9 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         CHECK(result1 == "G1 X10 Y10 Z10 F7800\n");
 
         Vec3d v2 = v1;
-        // This should test with pow_10_inv[XYZF_EXPORT_DIGITS] exactly,
+        // This should test with XYZ_EPSILON exactly,
         // but IEEE 754 floating point numbers cannot pass the test.
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        v2.y() += XYZ_EPSILON * 1.001;
+        v2.y() += GCodeFormatter::XYZ_EPSILON * 1.001;
         std::string result2{ writer.travel_to_xyz(v2) };
 
         std::ostringstream oss;
@@ -248,10 +243,9 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         CHECK(result1 == "G1 X10 Y10 Z10 F7800\n");
 
         Vec3d v2 = v1;
-        // This should test with pow_10_inv[XYZF_EXPORT_DIGITS] exactly,
+        // This should test with XYZ_EPSILON exactly,
         // but IEEE 754 floating point numbers cannot pass the test.
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
-        v2.z() += XYZ_EPSILON * 1.001;
+        v2.z() += GCodeFormatter::XYZ_EPSILON * 1.001;
         std::string result2{ writer.travel_to_xyz(v2) };
 
         std::ostringstream oss;
@@ -267,15 +261,14 @@ TEST_CASE("GCodeWriter emits G1 code correctly according to XYZF_EXPORT_DIGITS",
         std::string result1{ writer.travel_to_xyz(v1) };
         CHECK(result1 == "G1 X10 Y10 Z10 F7800\n");
 
-        // Movement smaller than pow_10_inv[XYZF_EXPORT_DIGITS]
-        double XYZ_EPSILON = GCodeFormatter::pow_10_inv[GCodeFormatter::XYZF_EXPORT_DIGITS];
+        // Movement smaller than XYZ_EPSILON
         Vec3d v2 = v1;
-        v2.array() += XYZ_EPSILON * 0.999;
+        v2.array() += GCodeFormatter::XYZ_EPSILON * 0.999;
         std::string result2{ writer.travel_to_xyz(v2) };
         CHECK(result2 == "");
 
         Vec3d v3 = v1;
-        v3.array() += XYZ_EPSILON * 0.1;
+        v3.array() += GCodeFormatter::XYZ_EPSILON * 0.1;
         std::string result3{ writer.travel_to_xyz(v3) };
         CHECK(result3 == "");
     }
